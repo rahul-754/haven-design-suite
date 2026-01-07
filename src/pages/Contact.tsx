@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import api from "@/lib/api";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,23 +23,31 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      await api.submitEnquiry(formData);
 
-    toast({
-      title: "Thank you for reaching out!",
-      description:
-        "Our team will contact you within 24 hours to schedule your free consultation.",
-    });
+      toast({
+        title: "Thank you for reaching out!",
+        description:
+          "Our team will contact you within 24 hours to schedule your free consultation.",
+      });
 
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      city: "",
-      requirement: "",
-    });
-    setIsSubmitting(false);
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        city: "",
+        requirement: "",
+      });
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (

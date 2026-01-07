@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import api from "@/lib/api";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -17,24 +18,24 @@ const AdminLogin = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login - in production, this would be a real auth call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      await api.login(email, password);
 
-    if (email === "admin@artisanhome.in" && password === "admin123") {
       toast({
         title: "Welcome back!",
         description: "You've successfully logged in.",
       });
+
       navigate("/admin");
-    } else {
+    } catch (error: any) {
       toast({
         title: "Login failed",
-        description: "Invalid email or password. Try admin@artisanhome.in / admin123",
+        description: error.response?.data?.error || "Invalid email or password",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

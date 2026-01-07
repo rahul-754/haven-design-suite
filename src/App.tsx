@@ -17,6 +17,7 @@ import AdminGallery from "./pages/admin/Gallery";
 import AdminContent from "./pages/admin/Content";
 import AdminSettings from "./pages/admin/Settings";
 import { AdminLayout } from "./components/layout/AdminLayout";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,19 +35,21 @@ const App = () => (
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          
+
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="enquiries" element={<AdminEnquiries />} />
-            <Route path="appointments" element={<AdminAppointments />} />
-            <Route path="gallery" element={<AdminGallery />} />
-            <Route path="content" element={<AdminContent />} />
-            <Route path="settings" element={<AdminSettings />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="enquiries" element={<AdminEnquiries />} />
+              <Route path="appointments" element={<AdminAppointments />} />
+              <Route path="gallery" element={<AdminGallery />} />
+              <Route path="content" element={<AdminContent />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
           </Route>
-          
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
